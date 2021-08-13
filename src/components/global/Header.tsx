@@ -61,7 +61,8 @@ const Header: FC = () => {
             to={link.to}
             key={link.to}
             className={clsx({
-              [classes.activeLink]: link.to !== '/' && ~path.search(link.to),
+              [classes.activeLink]:
+                path === link.to || (link.to !== '/' && ~path.search(link.to)),
             })}
           >
             {link.name}
