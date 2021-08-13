@@ -1,9 +1,11 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+
+import { useAddress } from 'contexts/address';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 const WalletSearchInput: FC<{}> = () => {
   const classes = useStyles();
+  const { setAddress } = useAddress();
+  const [localAddress, setLocalAddress] = useState<string | null>(null);
 
   return (
     <Paper component='form' className={classes.root}>
@@ -29,11 +33,17 @@ const WalletSearchInput: FC<{}> = () => {
         className={classes.input}
         placeholder='Enter wallet address...'
         inputProps={{ 'aria-label': 'search' }}
+        onChange={(e) => {
+          setLocalAddress(e.target.value as string);
+        }}
       />
       <IconButton
         type='button'
         className={classes.iconButton}
         aria-label='search'
+        onClick={() => {
+          if (localAddress) setAddress(localAddress);
+        }}
       >
         <SearchIcon />
       </IconButton>

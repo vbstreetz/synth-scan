@@ -7,7 +7,7 @@ import Header from './Header';
 
 import WalletOverview from 'pages/WalletOverview';
 import NetworkOverview from 'pages/NetworkOverview';
-import TransactionsOverview from 'pages/TransactionsOverview';
+import TransactionsList from 'pages/TransactionsList';
 
 import TxModal from 'modals/TxModal';
 
@@ -46,8 +46,8 @@ const Layout: FC = () => {
           <Route exact path={'/network-overview'} component={NetworkOverview} />
           <Route
             exact
-            path={'/transactions-overview'}
-            component={TransactionsOverview}
+            path={'/transactions-list'}
+            component={TransactionsList}
           />
         </Switch>
 

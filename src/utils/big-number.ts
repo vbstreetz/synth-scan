@@ -20,6 +20,10 @@ export function formatUnits(
   return toFixed(a, toBigNumber(10).pow(decimals), precision);
 }
 
+export function formatNumber(a: any, precision?: number) {
+  return toBigNumber(a).toFormat(precision ?? PRECISION);
+}
+
 export function toBigNumber(n: any) {
   return new BigNumber(n.toString());
 }

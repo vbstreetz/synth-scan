@@ -5,6 +5,9 @@
   "dependencies": {
     "@material-ui/core": "4.12.3",
     "@material-ui/icons": "4.11.2",
+    "@synthetixio/assets": "2.0.10",
+    "@synthetixio/contracts-interface": "2.47.0-ovm.5",
+    "@synthetixio/wei": "2.47.0-ovm.5",
     "@types/lodash": "4.14.172",
     "@types/query-string": "6.3.0",
     "bignumber.js": "9.0.1",
@@ -14,6 +17,7 @@
     "immutable-tuple": "0.4.10",
     "moment": "2.29.1",
     "node-sass": "6.0.1",
+    "nprogress": "0.2.0",
     "query-string": "7.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -22,7 +26,10 @@
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "2.1.5",
+    "@types/lodash": "4.14.171",
     "@types/node": "16.6.1",
+    "@types/nprogress": "0.2.0",
+    "@types/query-string": "6.3.0",
     "@types/react": "17.0.17",
     "@types/react-dom": "17.0.9",
     "@types/react-router-dom": "5.1.8",

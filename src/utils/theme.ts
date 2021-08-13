@@ -1,7 +1,7 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { BORDER_RADIUS } from 'config';
 
-export default createMuiTheme({
+export default createTheme({
   typography: {
     fontFamily: ['Work Sans', 'Arial', 'sans-serif'].join(','),
   },
@@ -14,7 +14,7 @@ export default createMuiTheme({
       main: 'rgb(0, 0, 0)',
     },
     secondary: {
-      main: 'rgba(0, 0, 0, 0.5)',
+      main: 'rgba(0, 0, 0, 0.5)', // rgb(9, 9, 47)
     },
   },
   overrides: {
