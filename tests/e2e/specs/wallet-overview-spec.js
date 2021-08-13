@@ -1,4 +1,3 @@
-/* eslint-disable ui-testing/missing-assertion-in-test */
 import WalletOverviewPage from '../pages/wallet-overview-page';
 
 const walletOverview = new WalletOverviewPage();
