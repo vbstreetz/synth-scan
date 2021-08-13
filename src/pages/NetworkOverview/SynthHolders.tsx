@@ -6,9 +6,10 @@ const useStyles = makeStyles((theme) => ({
   container: {},
 }));
 
-const NetworkOverview: FC<{}> = () => {
+const SynthHolders: FC = () => {
   const classes = useStyles();
+
   return <Box className={classes.container}></Box>;
 };
 
-export default NetworkOverview;
+export default SynthHolders;

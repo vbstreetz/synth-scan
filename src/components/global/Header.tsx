@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
 
     '& a': {
       textTransform: 'uppercase',
-      textDecoration: 'none',
       marginLeft: 54,
       color: 'rgba(0, 0, 0, 0.5)',
     },
@@ -61,7 +60,9 @@ const Header: FC = () => {
           <Link
             to={link.to}
             key={link.to}
-            className={clsx({ [classes.activeLink]: path === link.to })}
+            className={clsx({
+              [classes.activeLink]: link.to !== '/' && ~path.search(link.to),
+            })}
           >
             {link.name}
           </Link>
