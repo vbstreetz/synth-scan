@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => {
       gridGap: spacing,
     },
     statBox: {
-      background: '#F5F5F5',
+      background: 'white',
       borderRadius: BORDER_RADIUS,
       height: 128,
     },
@@ -56,10 +56,13 @@ const useStyles = makeStyles((theme) => {
       fontSize: 32,
     },
     synthBalanceTable: {
-      background: '#F5F5F5',
+      borderRadius: BORDER_RADIUS,
+      background: 'white',
+      borderLeft: '1px solid rgba(224, 224, 224, 1)',
+      borderRight: '1px solid rgba(224, 224, 224, 1)',
     },
     synthBalanceTableHead: {
-      background: '#e5e5e578',
+      background: '#E6E6E6',
       borderTop: '1px solid rgba(224, 224, 224, 1)',
     },
   };
@@ -193,10 +196,17 @@ const WalletOverview: FC<{}> = () => {
             </TableHead>
             <TableBody>
               {balances.map((balance) => (
-                <SynthBalanceTableRow
-                  key={balance.currencyKey}
-                  {...{ balance }}
-                />
+                <TableRow key={balance.currencyKey}>
+                  <TableCell component='th' scope='row'>
+                    {balance.synthName}
+                  </TableCell>
+                  <TableCell align='right'>
+                    {formatNumber(balance.amount, 2)}
+                  </TableCell>
+                  <TableCell align='right'>
+                    {formatNumber(balance.value, 4)}
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>
@@ -228,20 +238,6 @@ const StatBox: FC<{
         {valueSuffix}
       </Box>
     </Box>
-  );
-};
-
-const SynthBalanceTableRow: FC<{
-  balance: Balance;
-}> = ({ balance }) => {
-  return (
-    <TableRow>
-      <TableCell component='th' scope='row'>
-        {balance.synthName}
-      </TableCell>
-      <TableCell align='right'>{formatNumber(balance.amount, 2)}</TableCell>
-      <TableCell align='right'>{formatNumber(balance.value, 4)}</TableCell>
-    </TableRow>
   );
 };
 

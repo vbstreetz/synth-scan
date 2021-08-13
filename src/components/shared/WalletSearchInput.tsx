@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const WalletSearchInput: FC<{}> = () => {
   const classes = useStyles();
-  const { setAddress } = useAddress();
+  const { setAddress, address } = useAddress();
 
   return (
     <Paper
@@ -42,6 +42,7 @@ const WalletSearchInput: FC<{}> = () => {
         className={classes.input}
         placeholder='Enter wallet address...'
         inputProps={{ 'aria-label': 'search' }}
+        defaultValue={address}
       />
       <IconButton
         type='submit'
