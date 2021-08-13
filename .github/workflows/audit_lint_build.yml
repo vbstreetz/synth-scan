@@ -26,7 +26,7 @@ jobs:
         run: audit-ci --critical
 
       - name: Lockfile lint
-        run: lockfile-lint -p yarn.lock --type yarn --allowed-hosts npm --allowed-schemes "https:"
+        run: lockfile-lint -p yarn.lock --type yarn --allowed-hosts yarn --allowed-schemes "https:"
 
   build:
     needs: audit
