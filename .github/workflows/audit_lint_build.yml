@@ -13,9 +13,9 @@ jobs:
 
     container:
       image: ghcr.io/synthetixio/docker-sec-tools/alpine:14.17
-      credentials:
-        username: synthetixio
-        password: ${{ secrets.GH_PACKAGES_READ_ONLY }}
+      # credentials:
+      #   username: synthetixio
+      #   password: ${{ secrets.GH_PACKAGES_READ_ONLY }}
 
     steps:
       - name: Checkout
@@ -35,9 +35,9 @@ jobs:
 
     container:
       image: ghcr.io/synthetixio/docker-node/alpine:14.17
-      credentials:
-        username: synthetixio
-        password: ${{ secrets.GH_PACKAGES_READ_ONLY }}
+      # credentials:
+      #   username: synthetixio
+      #   password: ${{ secrets.GH_PACKAGES_READ_ONLY }}
 
     steps:
       - name: Checkout
