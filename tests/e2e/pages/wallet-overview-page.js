@@ -5,6 +5,10 @@ export default class WalletOverviewPage extends Page {
     return cy.findByTestId('wallet-address-input').find('input');
   }
 
+  getSynthBalanceRows() {
+    return cy.findAllByTestId('synth-balance-row');
+  }
+
   visit() {
     cy.visit('/');
   }

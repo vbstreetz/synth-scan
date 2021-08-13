@@ -1,4 +1,3 @@
-/* eslint-disable ui-testing/missing-assertion-in-test */
 import WalletOverviewPage from '../pages/wallet-overview-page';
 
 const walletOverview = new WalletOverviewPage();
@@ -9,9 +8,12 @@ describe('Wallet overview tests', () => {
   before(() => {
     walletOverview.visit();
   });
-  context('Verify correct data is shown', () => {
-    it(`after typing a wallet address which has locked SNX balance`, () => {
+  context('Verify correct data is shown after typing a wallet address', () => {
+    before(() => {
       walletOverview.getWalletAddressInput().type(`${walletAddress}{enter}`);
+    });
+    it(`possesed synths are shown in a table`, () => {
+      walletOverview.getSynthBalanceRows().should('have.length', 6);
     });
   });
 });

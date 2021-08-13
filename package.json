@@ -65,6 +65,7 @@
     "lint": "eslint . --ext ts,.tsx && tsc",
     "lint:sarif": "node tests/lint.js . --ext ts,.tsx",
     "test:e2e": "start-server-and-test 'yarn build && serve -s build -p 3000' http-get://localhost:3000 'synpress run'",
+    "test:e2e:ci": "synpress run",
     "tsc": "tsc --noEmit",
     "update:deps": "ncu -u && yarn"
   },
