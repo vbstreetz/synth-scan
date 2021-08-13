@@ -9,7 +9,7 @@ import WalletOverview from 'pages/WalletOverview';
 import NetworkOverview from 'pages/NetworkOverview';
 import TransactionsList from 'pages/TransactionsList';
 
-import TxModal from 'modals/TxModal';
+import SynthHolderModal from 'modals/SynthHolderModal';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -53,8 +53,12 @@ const Layout: FC = () => {
           <Route path={'/transactions-list'} component={TransactionsList} />
         </Switch>
 
+        {/* modals */}
         <Switch>
-          <Route exact path={'/tx/:hash'} component={TxModal} />
+          <Route
+            path={'/network-overview/synth-holders/:wallet'}
+            component={SynthHolderModal}
+          />
         </Switch>
       </Box>
     </Router>

@@ -13,17 +13,11 @@ import WalletSearchInput from 'components/shared/WalletSearchInput';
 import { BORDER_RADIUS } from 'config';
 import { useSynthetix } from 'contexts/synthetix';
 import { useAddress } from 'contexts/address';
-import { formatNumber } from 'utils/big-number';
 import { useUI } from 'contexts/ui';
+import { formatNumber } from 'utils/big-number';
+import useWalletSynthBalances from 'hooks/useWalletSynthBalances';
 
 const SPACING = 4;
-
-type Balance = {
-  currencyKey: string;
-  synthName: string;
-  amount: Wei;
-  value: Wei;
-};
 
 const useStyles = makeStyles((theme) => {
   const spacing = theme.spacing(SPACING);
@@ -72,13 +66,13 @@ const WalletOverview: FC<{}> = () => {
   const { js } = useSynthetix();
   const { address } = useAddress();
   const { startProgress, endProgress } = useUI();
+  const { balances } = useWalletSynthBalances(address);
 
   const [balanceSNX, setBalanceSNX] = useState<Wei>(wei(0));
   const [lockedSNX, setLockedSNX] = useState<Wei>(wei(0));
   const [transferrableSNX, setTransferrableSNX] = useState<Wei>(wei(0));
   const [debtSUSD, setDebtSUSD] = useState<Wei>(wei(0));
   const [cratio, setCRatio] = useState<Wei>(wei(0));
-  const [balances, setBalances] = useState<Balance[]>([]);
 
   useEffect(() => {
     if (!(js && address)) return;
@@ -90,11 +84,11 @@ const WalletOverview: FC<{}> = () => {
       },
     ];
 
-    const { Synthetix, SystemSettings, SynthUtil } = js.contracts;
-    const { formatEther, formatBytes32String, parseBytes32String } = js.utils;
-
     const load = async () => {
       startProgress();
+
+      const { Synthetix, SystemSettings } = js.contracts;
+      const { formatEther, formatBytes32String } = js.utils;
 
       const result = await Promise.all([
         SystemSettings.issuanceRatio(),
@@ -103,7 +97,6 @@ const WalletOverview: FC<{}> = () => {
         Synthetix.debtBalanceOf(address, formatBytes32String('sUSD')),
         Synthetix.collateral(address),
         Synthetix.balanceOf(address),
-        SynthUtil.synthsBalances(address),
       ]);
 
       endProgress();
@@ -116,38 +109,17 @@ const WalletOverview: FC<{}> = () => {
           debtSUSD,
           collateral,
           balanceSNX,
-        ] = result
-          .slice(0, result.length - 1)
-          .map((item) => wei(formatEther(item)));
+        ] = result.map((item) => wei(formatEther(item)));
 
         const lockedSNX = collateral.mul(
           Wei.min(wei(1), collateralRatio.div(issuanceRatio))
         );
-
-        const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-line
-          result.length - 1
-        ];
-
-        const balances: Balance[] = currencyKeys
-          .map((currencyKey: string, idx: number) => {
-            const synthName = parseBytes32String(currencyKey);
-            const amount = wei(formatEther(synthsBalances[idx]));
-            const value = wei(js.utils.formatEther(synthsUSDBalances[idx]));
-            return {
-              currencyKey,
-              synthName,
-              amount,
-              value,
-            };
-          })
-          .filter((b: Balance) => b.amount.gt(0));
 
         setBalanceSNX(balanceSNX);
         setLockedSNX(lockedSNX);
         setTransferrableSNX(transferrableSNX);
         setDebtSUSD(debtSUSD);
         setCRatio(collateralRatio);
-        setBalances(balances);
       }
     };
 
