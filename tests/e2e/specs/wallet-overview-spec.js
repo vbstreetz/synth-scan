@@ -3,16 +3,20 @@ import WalletOverviewPage from '../pages/wallet-overview-page';
 
 const walletOverview = new WalletOverviewPage();
 
-// let metamaskWalletAddress;
+let metamaskWalletAddress;
 
 describe('Wallet overview tests', () => {
   before(() => {
     walletOverview.getMetamaskWalletAddress().then((address) => {
-      // metamaskWalletAddress = address;
+      metamaskWalletAddress = address;
     });
     walletOverview.visit();
   });
-  context('Verify correct data', () => {
-    it(`is shown after typing a wallet address which has SNX balance`, () => {});
+  context('Verify correct data is shown', () => {
+    it(`after typing a wallet address which has locked SNX balance`, () => {
+      walletOverview
+        .getWalletAddressInput()
+        .type(`${metamaskWalletAddress}{enter}`);
+    });
   });
 });
