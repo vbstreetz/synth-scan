@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -25,25 +25,28 @@ const useStyles = makeStyles((theme) => ({
 const WalletSearchInput: FC<{}> = () => {
   const classes = useStyles();
   const { setAddress } = useAddress();
-  const [localAddress, setLocalAddress] = useState<string | null>(null);
 
   return (
-    <Paper component='form' className={classes.root}>
+    <Paper
+      component='form'
+      className={classes.root}
+      onSubmit={(e) => {
+        e.preventDefault();
+        const form = e.target as any;
+        const localAddress = form.input.value as string;
+        if (localAddress) setAddress(localAddress);
+      }}
+    >
       <InputBase
+        name='input'
         className={classes.input}
         placeholder='Enter wallet address...'
         inputProps={{ 'aria-label': 'search' }}
-        onChange={(e) => {
-          setLocalAddress(e.target.value as string);
-        }}
       />
       <IconButton
-        type='button'
+        type='submit'
         className={classes.iconButton}
         aria-label='search'
-        onClick={() => {
-          if (localAddress) setAddress(localAddress);
-        }}
       >
         <SearchIcon />
       </IconButton>
