@@ -193,7 +193,10 @@ const WalletOverview: FC<{}> = () => {
             </TableHead>
             <TableBody>
               {balances.map((balance) => (
-                <TableRow key={balance.currencyKey}>
+                <TableRow
+                  key={balance.currencyKey}
+                  data-testid='synth-balance-row'
+                >
                   <TableCell component='th' scope='row'>
                     <Box className={'flex items-center'}>
                       {' '}
