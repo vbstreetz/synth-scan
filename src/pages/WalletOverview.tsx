@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
@@ -6,18 +6,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import BigNumber from 'bignumber.js';
+import Wei, { wei } from '@synthetixio/wei';
 import clsx from 'clsx';
 
 import WalletSearchInput from 'components/shared/WalletSearchInput';
-import { toBigNumber } from 'utils/big-number';
 import { BORDER_RADIUS } from 'config';
+import { useSynthetix } from 'contexts/synthetix';
+import { useAddress } from 'contexts/address';
+import { formatNumber } from 'utils/big-number';
+import { useUI } from 'contexts/ui';
 
 const SPACING = 4;
 
 type Balance = {
   currencyKey: string;
-  amount: BigNumber;
+  amount: Wei;
 };
 
 const useStyles = makeStyles((theme) => {
@@ -62,12 +65,73 @@ const useStyles = makeStyles((theme) => {
 
 const WalletOverview: FC<{}> = () => {
   const classes = useStyles();
-  const [balances] = useState<Balance[]>([
-    {
-      currencyKey: 'x',
-      amount: toBigNumber(300),
-    },
-  ]);
+
+  const { js } = useSynthetix();
+  const { address } = useAddress();
+  const { startProgress, endProgress } = useUI();
+
+  const [balanceSNX, setBalanceSNX] = useState<Wei>(wei(0));
+  const [lockedSNX, setLockedSNX] = useState<Wei>(wei(0));
+  const [transferrableSNX, setTransferrableSNX] = useState<Wei>(wei(0));
+  const [debtSUSD, setDebtSUSD] = useState<Wei>(wei(0));
+  const [cratio, setCRatio] = useState<Wei>(wei(0));
+  const [balances, setBalances] = useState<Balance[]>([]);
+
+  useEffect(() => {
+    if (!(js && address)) return;
+
+    let isMounted = true;
+    const unsubs = [
+      () => {
+        isMounted = false;
+      },
+    ];
+
+    const { Synthetix, SystemSettings } = js.contracts;
+    const { formatEther, formatBytes32String } = js.utils;
+
+    const load = async () => {
+      startProgress();
+
+      const result = await Promise.all([
+        SystemSettings.issuanceRatio(),
+        Synthetix.collateralisationRatio(address),
+        Synthetix.transferableSynthetix(address),
+        Synthetix.debtBalanceOf(address, formatBytes32String('sUSD')),
+        Synthetix.collateral(address),
+        Synthetix.balanceOf(address),
+      ]);
+      const [
+        issuanceRatio,
+        collateralRatio,
+        transferrableSNX,
+        debtSUSD,
+        collateral,
+        balanceSNX,
+      ] = result.map((item) => wei(formatEther(item)));
+
+      const lockedSNX = collateral.mul(
+        Wei.min(wei(1), collateralRatio.div(issuanceRatio))
+      );
+
+      endProgress();
+
+      if (isMounted) {
+        setBalanceSNX(balanceSNX);
+        setLockedSNX(lockedSNX);
+        setTransferrableSNX(transferrableSNX);
+        setDebtSUSD(debtSUSD);
+        setCRatio(collateralRatio);
+        setBalances([]);
+      }
+    };
+
+    load();
+
+    return () => {
+      unsubs.forEach((unsub) => unsub());
+    };
+  }, [js, address, startProgress, endProgress]);
 
   return (
     <Box className={classes.container}>
@@ -76,18 +140,17 @@ const WalletOverview: FC<{}> = () => {
       </Box>
 
       <Box className={classes.a} mb={SPACING}>
-        <StatBox label='SNX BALANCE' value={toBigNumber(0)} />
-        <StatBox label='LOCKED SNX' value={toBigNumber(300)} />
-        <StatBox label='TRANSFERRABLE SNX' value={toBigNumber(1200)} />
+        <StatBox label='SNX BALANCE' value={balanceSNX} />
+        <StatBox label='LOCKED SNX' value={lockedSNX} />
+        <StatBox label='TRANSFERRABLE SNX' value={transferrableSNX} />
       </Box>
 
       <Box className={classes.b}>
         <Box className={classes.c}>
-          <StatBox label='WALLET DEBT (sUSD)' value={toBigNumber(0)} />
+          <StatBox label='WALLET DEBT (sUSD)' value={debtSUSD} />
           <StatBox
             label='WALLET C-RATIO'
-            value={toBigNumber(300)}
-            valueDecimals={0}
+            value={wei(1).div(cratio).mul(100)}
             valueSuffix='%'
           />
         </Box>
@@ -121,10 +184,9 @@ const WalletOverview: FC<{}> = () => {
 
 const StatBox: FC<{
   label: string;
-  value: BigNumber;
-  valueDecimals?: number;
+  value: Wei;
   valueSuffix?: string;
-}> = ({ label, value, valueDecimals = 2, valueSuffix = '' }) => {
+}> = ({ label, value, valueSuffix = '' }) => {
   const classes = useStyles();
   return (
     <Box
@@ -138,7 +200,7 @@ const StatBox: FC<{
     >
       <Box className={classes.statBoxLabel}>{label}</Box>
       <Box className={classes.statBoxValue}>
-        {value.toFormat(valueDecimals)}
+        {formatNumber(value, 2)}
         {valueSuffix}
       </Box>
     </Box>
@@ -148,14 +210,14 @@ const StatBox: FC<{
 const SynthBalanceTableRow: FC<{
   balance: Balance;
 }> = ({ balance }) => {
-  const value = toBigNumber(0);
+  const value = wei(0);
   return (
     <TableRow>
       <TableCell component='th' scope='row'>
         {balance.currencyKey}
       </TableCell>
-      <TableCell>{balance.amount.toFormat(2)}</TableCell>
-      <TableCell align='right'>{value.toFormat(0)}</TableCell>
+      <TableCell>{formatNumber(balance.amount, 2)}</TableCell>
+      <TableCell align='right'>{formatNumber(value)}</TableCell>
     </TableRow>
   );
 };

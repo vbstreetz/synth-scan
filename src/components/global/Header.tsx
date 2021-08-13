@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const LINKS = [
   { name: 'wallet overview', to: '/' },
   { name: 'network overview', to: '/network-overview' },
-  { name: 'transactions overview', to: '/transactions-overview' },
+  { name: 'transactions overview', to: '/transactions-list' },
 ];
 
 const Header: FC = () => {
