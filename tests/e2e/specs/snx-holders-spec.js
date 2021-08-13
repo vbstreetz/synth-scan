@@ -2,7 +2,7 @@ import SnxHoldersPage from '../pages/network-overview/snx-holders-page';
 
 const snxHolders = new SnxHoldersPage();
 
-describe('Wallet overview tests', () => {
+describe('SNX holders tests', () => {
   before(() => {
     snxHolders.visit();
   });
