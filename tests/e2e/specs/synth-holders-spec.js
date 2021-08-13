@@ -21,7 +21,7 @@ describe('Synth holders tests', () => {
 
     it(`should be able to close the list of synths`, () => {
       synthHolders.getCloseModalButton().click();
-      synthHolders.getSynthHolderModal().should('not.be.visible');
+      synthHolders.getSynthHolderModal().should('not.exist');
     });
   });
 });
