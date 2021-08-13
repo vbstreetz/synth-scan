@@ -195,7 +195,16 @@ const WalletOverview: FC<{}> = () => {
               {balances.map((balance) => (
                 <TableRow key={balance.currencyKey}>
                   <TableCell component='th' scope='row'>
-                    {balance.synthName}
+                    <Box className={'flex items-center'}>
+                      {' '}
+                      <img
+                        src={`https:///www.synthetix.io/assets/synths/svg/${balance.synthName}.svg`}
+                        alt={balance.synthName}
+                        width={20}
+                        height={20}
+                      />
+                      <Box ml={1}>{balance.synthName}</Box>
+                    </Box>
                   </TableCell>
                   <TableCell align='right'>
                     {formatNumber(balance.amount, 2)}
