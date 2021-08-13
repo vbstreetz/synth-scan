@@ -59,17 +59,17 @@ const NetworkOverview: FC<{}> = () => {
             </Button>
           </Link>
         ))}
-
-        <Switch>
-          {TABS.map((tab) => (
-            <Route
-              path={`/network-overview${tab.to}`}
-              component={tab.component}
-            />
-          ))}
-          <Redirect to='/network-overview/snx-holders' />
-        </Switch>
       </Box>
+
+      <Switch>
+        {TABS.map((tab) => (
+          <Route
+            path={`/network-overview${tab.to}`}
+            component={tab.component}
+          />
+        ))}
+        <Redirect to='/network-overview/snx-holders' />
+      </Switch>
     </Box>
   );
 };

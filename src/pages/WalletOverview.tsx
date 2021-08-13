@@ -120,8 +120,7 @@ const WalletOverview: FC<{}> = () => {
         Wei.min(wei(1), collateralRatio.div(issuanceRatio))
       );
 
-      // eslint-disable-next-line
-      const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-next-line
+      const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-line
         result.length - 1
       ];
 
