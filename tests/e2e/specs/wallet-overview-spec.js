@@ -13,6 +13,9 @@ describe('Wallet overview tests', () => {
       walletOverview.getWalletAddressInput().type(`${walletAddress}{enter}`);
     });
     it(`possesed synths are shown in a table`, () => {
+      walletOverview.getSynthBalanceRows().then((balanceRow) => {
+        balanceRow.should('be.visible');
+      });
       walletOverview.getSynthBalanceRows().should('have.length', 6);
     });
   });

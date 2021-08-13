@@ -6,4 +6,12 @@ export default class Page {
   getMetamaskWalletAddress() {
     return cy.fetchMetamaskWalletAddress();
   }
+
+  getSynthBalanceRows() {
+    return cy.findAllByTestId('synth-balance-row');
+  }
+
+  getWalletAddressInput() {
+    return cy.findByTestId('wallet-address-input').find('input');
+  }
 }
