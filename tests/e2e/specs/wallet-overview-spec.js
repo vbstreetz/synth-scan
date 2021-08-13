@@ -14,7 +14,7 @@ describe('Wallet overview tests', () => {
     });
     it(`possesed synths are shown in a table`, () => {
       walletOverview.getSynthBalanceRows().then((balanceRow) => {
-        balanceRow.should('be.visible');
+        balanceRow.is(':visible');
       });
       walletOverview.getSynthBalanceRows().should('have.length', 6);
     });

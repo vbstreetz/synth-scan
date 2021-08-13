@@ -16,7 +16,7 @@ describe('Transaction overview tests', () => {
     });
     it(`transactions are shown in a table`, () => {
       transactionsOverview.getTransactionRows().then((transactionRow) => {
-        transactionRow.should('be.visible');
+        transactionRow.is(':visible');
       });
     });
   });

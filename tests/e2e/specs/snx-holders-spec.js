@@ -9,7 +9,7 @@ describe('SNX holders tests', () => {
   context('Verify correct data is shown', () => {
     it(`table shows top 99 SNX holders`, () => {
       snxHolders.getSnxHolderRows().then((snxHolderRow) => {
-        snxHolderRow.should('be.visible');
+        snxHolderRow.is(':visible');
       });
       snxHolders.getSnxHolderRows().should('have.length', 99);
     });

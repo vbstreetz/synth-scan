@@ -9,7 +9,7 @@ describe('Synth holders tests', () => {
   context('Verify correct data is shown', () => {
     it(`table shows top 99 Synth holders`, () => {
       synthHolders.getSynthHolderRows().then((synthHolderRow) => {
-        synthHolderRow.should('be.visible');
+        synthHolderRow.is(':visible');
       });
       synthHolders.getSynthHolderRows().should('have.length', 99);
     });
