@@ -55,7 +55,9 @@ const useWalletSynthBalances = (address: string | null) => {
           })
           .filter((b: Balance) => b.amount.gt(0));
 
-        setBalances(orderBy(balances, (b: Balance) => b.amount.toNumber()));
+        setBalances(
+          orderBy(balances, (b: Balance) => b.value.toNumber(), 'desc')
+        );
         setTotalValue(totalValue);
       }
     };

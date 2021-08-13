@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 // import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
 import { SnxHolder } from '@synthetixio/data/build/data/generated/graphql';
 import { wei } from '@synthetixio/wei';
+import clsx from 'clsx';
 
 import { BORDER_RADIUS } from 'config';
 import { useSynthetix } from 'contexts/synthetix';
@@ -19,6 +20,14 @@ import CopyToClipboard from 'components/shared/CopyToClipboard';
 import useWalletSynthBalances from 'hooks/useWalletSynthBalances';
 
 const SPACING = 4;
+
+const BACKGROUNDS: Record<string, string> = {
+  sUSD: '#10BA97',
+  sBTC: '#F56070',
+  sETH: '#6E97FF',
+  sBNB: 'yellow',
+  sUnknown: 'gray',
+};
 
 type Holder = {
   wallet: string;
@@ -44,6 +53,13 @@ const useStyles = makeStyles((theme) => {
       '& th:last-child': {
         borderTopRightRadius: BORDER_RADIUS,
       },
+    },
+    synthBoxes: {
+      height: 20,
+      width: 400,
+    },
+    synthBox: {
+      color: 'black',
     },
   };
 });
@@ -77,7 +93,6 @@ const SynthHolders: FC = () => {
         const h = holders.map((holder: SnxHolder) => {
           return {
             wallet: holder.id,
-            totalSynthBalance: wei(0),
           };
         });
 
@@ -118,7 +133,7 @@ const SynthHolders: FC = () => {
 };
 
 const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const { balances, totalValue } = useWalletSynthBalances(holder.wallet);
 
@@ -136,7 +151,36 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
       <TableCell align='right'>
         {!totalValue ? '-' : formatNumber(totalValue, 2)}
       </TableCell>
-      <TableCell></TableCell>
+      <TableCell>
+        {totalValue?.gt(0) ? (
+          <Box className={clsx(classes.synthBoxes, 'flex', 'flex-grow')}>
+            {balances.map((balance) => (
+              <Box
+                key={balance.currencyKey}
+                className={clsx(
+                  classes.synthBox,
+                  'flex',
+                  'flex-grow',
+                  'items-center',
+                  'justify-center'
+                )}
+                style={{
+                  width: `${balance.value
+                    .div(totalValue)
+                    .mul(100)
+                    .toNumber()}%`,
+                  background:
+                    BACKGROUNDS[balance.synthName] ?? BACKGROUNDS.sUnknown,
+                }}
+              >
+                {balance.synthName}
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          '-'
+        )}
+      </TableCell>
     </TableRow>
   );
 };
