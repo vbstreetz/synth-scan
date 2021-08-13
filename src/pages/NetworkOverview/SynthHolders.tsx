@@ -6,9 +6,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 // import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
 import { SnxHolder } from '@synthetixio/data/build/data/generated/graphql';
-import { wei } from '@synthetixio/wei';
 import clsx from 'clsx';
 
 import { BORDER_RADIUS } from 'config';
@@ -155,26 +155,32 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
         {totalValue?.gt(0) ? (
           <Box className={clsx(classes.synthBoxes, 'flex', 'flex-grow')}>
             {balances.map((balance) => (
-              <Box
+              <Tooltip
                 key={balance.currencyKey}
-                className={clsx(
-                  classes.synthBox,
-                  'flex',
-                  'flex-grow',
-                  'items-center',
-                  'justify-center'
-                )}
-                style={{
-                  width: `${balance.value
-                    .div(totalValue)
-                    .mul(100)
-                    .toNumber()}%`,
-                  background:
-                    BACKGROUNDS[balance.synthName] ?? BACKGROUNDS.sUnknown,
-                }}
+                title={`${formatNumber(balance.amount)} ${balance.synthName}`}
+                arrow
+                placement='top'
               >
-                {balance.synthName}
-              </Box>
+                <Box
+                  className={clsx(
+                    classes.synthBox,
+                    'flex',
+                    'flex-grow',
+                    'items-center',
+                    'justify-center'
+                  )}
+                  style={{
+                    width: `${balance.value
+                      .div(totalValue)
+                      .mul(100)
+                      .toNumber()}%`,
+                    background:
+                      BACKGROUNDS[balance.synthName] ?? BACKGROUNDS.sUnknown,
+                  }}
+                >
+                  {balance.synthName}
+                </Box>
+              </Tooltip>
             ))}
           </Box>
         ) : (
