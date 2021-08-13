@@ -2733,10 +2733,10 @@
     synthetix "2.41.0"
     web3-utils "1.2.11"
 
-"@synthetixio/synpress@0.9.10":
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/@synthetixio/synpress/-/synpress-0.9.10.tgz#74b16b0ab3304c6d1761655f7143c6b65d097104"
-  integrity sha512-jWQe5rCENYjC0Zg7q9DOvn3wiysK8FCiD4qsbMpXjT6DsTtJ6DxKbPE73EG2A7E4l+3fReYsTZ6Oi7qHCzyDaw==
+"@synthetixio/synpress@0.9.11":
+  version "0.9.11"
+  resolved "https://registry.yarnpkg.com/@synthetixio/synpress/-/synpress-0.9.11.tgz#2231b7f2837a2d2f119e352fe5ddb067854c8313"
+  integrity sha512-6n30vpuBz6hfrBWF/EXCUzAroLHs48KyrLSMrYKnSFi/XPkhbkxTZjRdTtTNaHVevlBJzHj3tz/pMRCBBFcVdA==
   dependencies:
     "@cypress/code-coverage" "3.9.10"
     "@cypress/react" "5.9.4"
