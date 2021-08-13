@@ -105,42 +105,43 @@ const WalletOverview: FC<{}> = () => {
         Synthetix.balanceOf(address),
         SynthUtil.synthsBalances(address),
       ]);
-      const [
-        issuanceRatio,
-        collateralRatio,
-        transferrableSNX,
-        debtSUSD,
-        collateral,
-        balanceSNX,
-      ] = result
-        .slice(0, result.length - 1)
-        .map((item) => wei(formatEther(item)));
-
-      const lockedSNX = collateral.mul(
-        Wei.min(wei(1), collateralRatio.div(issuanceRatio))
-      );
-
-      const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-line
-        result.length - 1
-      ];
-
-      const balances: Balance[] = currencyKeys
-        .map((currencyKey: string, idx: number) => {
-          const synthName = parseBytes32String(currencyKey);
-          const amount = wei(formatEther(synthsBalances[idx]));
-          const value = wei(js.utils.formatEther(synthsUSDBalances[idx]));
-          return {
-            currencyKey,
-            synthName,
-            amount,
-            value,
-          };
-        })
-        .filter((b: Balance) => b.amount.gt(0));
 
       endProgress();
 
       if (isMounted) {
+        const [
+          issuanceRatio,
+          collateralRatio,
+          transferrableSNX,
+          debtSUSD,
+          collateral,
+          balanceSNX,
+        ] = result
+          .slice(0, result.length - 1)
+          .map((item) => wei(formatEther(item)));
+
+        const lockedSNX = collateral.mul(
+          Wei.min(wei(1), collateralRatio.div(issuanceRatio))
+        );
+
+        const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-line
+          result.length - 1
+        ];
+
+        const balances: Balance[] = currencyKeys
+          .map((currencyKey: string, idx: number) => {
+            const synthName = parseBytes32String(currencyKey);
+            const amount = wei(formatEther(synthsBalances[idx]));
+            const value = wei(js.utils.formatEther(synthsUSDBalances[idx]));
+            return {
+              currencyKey,
+              synthName,
+              amount,
+              value,
+            };
+          })
+          .filter((b: Balance) => b.amount.gt(0));
+
         setBalanceSNX(balanceSNX);
         setLockedSNX(lockedSNX);
         setTransferrableSNX(transferrableSNX);
@@ -196,7 +197,6 @@ const WalletOverview: FC<{}> = () => {
                 <TableRow key={balance.currencyKey}>
                   <TableCell component='th' scope='row'>
                     <Box className={'flex items-center'}>
-                      {' '}
                       <img
                         src={`https:///www.synthetix.io/assets/synths/svg/${balance.synthName}.svg`}
                         alt={balance.synthName}

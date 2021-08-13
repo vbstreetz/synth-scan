@@ -29,7 +29,6 @@ type Holder = {
   cratio: Wei;
   totalDebtSUSD: Wei;
   debtPercentage: Wei;
-  synthBalanceSUSD: Wei;
 };
 
 const useStyles = makeStyles((theme) => {
@@ -201,46 +200,76 @@ const SnxHolders: FC = () => {
           </TableHead>
           <TableBody>
             {holders.map((holder, i) => (
-              <TableRow key={holder.wallet}>
-                <TableCell component='th' scope='row'>
-                  {i + 1}
-                </TableCell>
-                <TableCell>
-                  <Copy
-                    label={abbrAddress(holder.wallet)}
-                    value={holder.wallet}
-                  />
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(holder.totalSNX, 2)}
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(holder.lockedSNX, 2)}
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(
-                    holder.cratio.lte(0)
-                      ? wei(0)
-                      : wei(1).div(holder.cratio).mul(100),
-                    2
-                  )}
-                  %
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(holder.totalDebtSUSD, 2)}
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(holder.debtPercentage, 2)}%
-                </TableCell>
-                <TableCell align='right'>
-                  {formatNumber(holder.synthBalanceSUSD, 2)}
-                </TableCell>
-              </TableRow>
+              <HolderRow key={i} {...{ holder }} rank={i + 1} />
             ))}
           </TableBody>
         </Table>
       )}
     </Box>
+  );
+};
+
+const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
+  // const classes = useStyles();
+
+  const { js } = useSynthetix();
+  const [synthBalanceSUSD, setSynthBalanceSUSD] = useState<Wei | null>(null);
+
+  useEffect(() => {
+    if (!js) return;
+
+    let isMounted = true;
+    const unsubs = [
+      () => {
+        isMounted = false;
+      },
+    ];
+
+    const load = async () => {
+      const { ProxyERC20sUSD } = js.contracts;
+      const { formatEther } = js.utils;
+      const unformatedBalance = await ProxyERC20sUSD.balanceOf(holder.wallet);
+
+      if (isMounted) {
+        const balance = wei(formatEther(unformatedBalance));
+        setSynthBalanceSUSD(balance);
+      }
+    };
+
+    load();
+
+    return () => {
+      unsubs.forEach((unsub) => unsub());
+    };
+  }, [js, holder.wallet]);
+
+  return (
+    <TableRow key={holder.wallet}>
+      <TableCell component='th' scope='row'>
+        {rank}
+      </TableCell>
+      <TableCell>
+        <Copy label={abbrAddress(holder.wallet)} value={holder.wallet} />
+      </TableCell>
+      <TableCell align='right'>{formatNumber(holder.totalSNX, 2)}</TableCell>
+      <TableCell align='right'>{formatNumber(holder.lockedSNX, 2)}</TableCell>
+      <TableCell align='right'>
+        {formatNumber(
+          holder.cratio.lte(0) ? wei(0) : wei(1).div(holder.cratio).mul(100),
+          2
+        )}
+        %
+      </TableCell>
+      <TableCell align='right'>
+        {formatNumber(holder.totalDebtSUSD, 2)}
+      </TableCell>
+      <TableCell align='right'>
+        {formatNumber(holder.debtPercentage, 2)}%
+      </TableCell>
+      <TableCell align='right'>
+        {!synthBalanceSUSD ? '-' : formatNumber(synthBalanceSUSD, 2)}
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -275,4 +304,5 @@ const Copy: FC<{ label: string; value: string }> = ({ label, value }) => {
     </CopyToClipboard>
   );
 };
+
 export default SnxHolders;
