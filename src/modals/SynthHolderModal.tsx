@@ -46,7 +46,7 @@ const SynthHolderModal: FC<{
   const close = () => history.push('/network-overview/synth-holders');
 
   return (
-    <Dialog open={true} onClose={() => {}}>
+    <Dialog open={true} onClose={() => {}} data-testid='synth-holder-modal'>
       <Box className={classes.container}>
         <Box
           px={4}
@@ -58,7 +58,11 @@ const SynthHolderModal: FC<{
             <CopyToClipboard label={abbrAddress(wallet)} value={wallet} />
           </Typography>
 
-          <CloseIcon className='cursor-pointer' onClick={close} />
+          <CloseIcon
+            className='cursor-pointer'
+            onClick={close}
+            data-testid='close-modal-button'
+          />
         </Box>
 
         <Table aria-label='SYNTH BALANCE' size={'small'}>

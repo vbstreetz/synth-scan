@@ -199,7 +199,7 @@ const TransactionsList: FC<{}> = () => {
             </TableHead>
             <TableBody>
               {transactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+                <TableRow key={transaction.id} data-testid='transaction-row'>
                   <TableCell component='th' scope='row'>
                     {moment(transaction.timestamp)
                       .local()

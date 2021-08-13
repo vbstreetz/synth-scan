@@ -148,7 +148,7 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
   const { balances, totalValue } = useWalletSynthBalances(holder.wallet);
 
   return (
-    <TableRow key={holder.wallet}>
+    <TableRow key={holder.wallet} data-testid='synth-holder-row'>
       <TableCell component='th' scope='row'>
         {rank}
       </TableCell>
@@ -205,6 +205,7 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
               'flex items-center justify-center',
               classes.listButton
             )}
+            data-testid='list-button'
           >
             LIST
           </Box>
