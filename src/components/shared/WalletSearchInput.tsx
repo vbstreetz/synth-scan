@@ -48,6 +48,7 @@ const WalletSearchInput: FC<{}> = () => {
         placeholder='Enter wallet address...'
         inputProps={{ 'aria-label': 'search' }}
         defaultValue={address}
+        data-testid='wallet-address-input'
       />
       <IconButton
         type='submit'
