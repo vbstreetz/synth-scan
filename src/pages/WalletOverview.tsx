@@ -20,7 +20,9 @@ const SPACING = 4;
 
 type Balance = {
   currencyKey: string;
+  synthName: string;
   amount: Wei;
+  value: Wei;
 };
 
 const useStyles = makeStyles((theme) => {
@@ -87,8 +89,8 @@ const WalletOverview: FC<{}> = () => {
       },
     ];
 
-    const { Synthetix, SystemSettings } = js.contracts;
-    const { formatEther, formatBytes32String } = js.utils;
+    const { Synthetix, SystemSettings, SynthUtil } = js.contracts;
+    const { formatEther, formatBytes32String, parseBytes32String } = js.utils;
 
     const load = async () => {
       startProgress();
@@ -100,6 +102,7 @@ const WalletOverview: FC<{}> = () => {
         Synthetix.debtBalanceOf(address, formatBytes32String('sUSD')),
         Synthetix.collateral(address),
         Synthetix.balanceOf(address),
+        SynthUtil.synthsBalances(address),
       ]);
       const [
         issuanceRatio,
@@ -108,11 +111,32 @@ const WalletOverview: FC<{}> = () => {
         debtSUSD,
         collateral,
         balanceSNX,
-      ] = result.map((item) => wei(formatEther(item)));
+      ] = result
+        .slice(0, result.length - 1)
+        .map((item) => wei(formatEther(item)));
 
       const lockedSNX = collateral.mul(
         Wei.min(wei(1), collateralRatio.div(issuanceRatio))
       );
+
+      // eslint-disable-next-line
+      const [currencyKeys, synthsBalances, synthsUSDBalances] = result[ // eslint-disable-next-line
+        result.length - 1
+      ];
+
+      const balances: Balance[] = currencyKeys
+        .map((currencyKey: string, idx: number) => {
+          const synthName = parseBytes32String(currencyKey);
+          const amount = wei(formatEther(synthsBalances[idx]));
+          const value = wei(js.utils.formatEther(synthsUSDBalances[idx]));
+          return {
+            currencyKey,
+            synthName,
+            amount,
+            value,
+          };
+        })
+        .filter((b: Balance) => b.amount.gt(0));
 
       endProgress();
 
@@ -122,7 +146,7 @@ const WalletOverview: FC<{}> = () => {
         setTransferrableSNX(transferrableSNX);
         setDebtSUSD(debtSUSD);
         setCRatio(collateralRatio);
-        setBalances([]);
+        setBalances(balances);
       }
     };
 
@@ -163,7 +187,7 @@ const WalletOverview: FC<{}> = () => {
             <TableHead className={classes.synthBalanceTableHead}>
               <TableRow>
                 <TableCell>TOKEN</TableCell>
-                <TableCell>BALANCE</TableCell>
+                <TableCell align='right'>BALANCE</TableCell>
                 <TableCell align='right'>VALUE (sUSD)</TableCell>
               </TableRow>
             </TableHead>
@@ -210,14 +234,13 @@ const StatBox: FC<{
 const SynthBalanceTableRow: FC<{
   balance: Balance;
 }> = ({ balance }) => {
-  const value = wei(0);
   return (
     <TableRow>
       <TableCell component='th' scope='row'>
-        {balance.currencyKey}
+        {balance.synthName}
       </TableCell>
-      <TableCell>{formatNumber(balance.amount, 2)}</TableCell>
-      <TableCell align='right'>{formatNumber(value)}</TableCell>
+      <TableCell align='right'>{formatNumber(balance.amount, 2)}</TableCell>
+      <TableCell align='right'>{formatNumber(balance.value, 4)}</TableCell>
     </TableRow>
   );
 };
