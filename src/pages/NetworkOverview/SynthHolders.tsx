@@ -10,6 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 // import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
 import { SnxHolder } from '@synthetixio/data/build/data/generated/graphql';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
 import { BORDER_RADIUS } from 'config';
 import { useSynthetix } from 'contexts/synthetix';
@@ -60,6 +61,14 @@ const useStyles = makeStyles((theme) => {
     },
     synthBox: {
       color: 'black',
+    },
+    listButton: {
+      background: '#C4C4C4',
+      color: 'black',
+      fontSize: 12,
+      borderRadius: 100,
+      width: 56,
+      height: 20,
     },
   };
 });
@@ -119,6 +128,7 @@ const SynthHolders: FC = () => {
               <TableCell>WALLET</TableCell>
               <TableCell align='right'>TOTAL SYNTH BALANCE (sUSD)</TableCell>
               <TableCell>BREAKDOWN BY SYNTH</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -167,7 +177,8 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
                     'flex',
                     'flex-grow',
                     'items-center',
-                    'justify-center'
+                    'justify-center',
+                    'cursor-pointer'
                   )}
                   style={{
                     width: `${balance.value
@@ -186,6 +197,18 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
         ) : (
           '-'
         )}
+      </TableCell>
+      <TableCell>
+        <Link to={`/network-overview/synth-holders/${holder.wallet}`}>
+          <Box
+            className={clsx(
+              'flex items-center justify-center',
+              classes.listButton
+            )}
+          >
+            LIST
+          </Box>
+        </Link>
       </TableCell>
     </TableRow>
   );

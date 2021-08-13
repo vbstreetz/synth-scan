@@ -8,7 +8,7 @@ export default createTheme({
   palette: {
     background: {
       default: '#e5e5e554',
-      paper: '#e5e5e554',
+      paper: '#fff',
     },
     primary: {
       main: 'rgb(0, 0, 0)',
