@@ -142,7 +142,6 @@ jobs:
         run: yarn test:e2e
         env:
           NODE_OPTIONS: --max_old_space_size=7168
-          BASE_URL: ${{ secrets.BASE_URL }}
           SECRET_WORDS: ${{ secrets.SECRET_WORDS }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           NETWORK_NAME: ${{ secrets.NETWORK_NAME }}
