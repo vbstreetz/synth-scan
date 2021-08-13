@@ -55,7 +55,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext ts,.tsx && tsc",
-    "tsc": "tsc --noEmit"
+    "lint:sarif": "node lint.js . --ext ts,.tsx",
+    "tsc": "tsc --noEmit",
+    "update:deps": "ncu -u && yarn"
   },
   "browserslist": {
     "production": [
