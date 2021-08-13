@@ -150,7 +150,7 @@ const WalletOverview: FC<{}> = () => {
           <StatBox label='WALLET DEBT (sUSD)' value={debtSUSD} />
           <StatBox
             label='WALLET C-RATIO'
-            value={wei(1).div(cratio).mul(100)}
+            value={cratio.lte(0) ? wei(0) : wei(1).div(cratio).mul(100)}
             valueSuffix='%'
           />
         </Box>
