@@ -2690,12 +2690,17 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@synthetixio/assets@2.0.10":
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/@synthetixio/assets/-/assets-2.0.10.tgz#3ae6f3766fc68950b08b0739e7d8f136b538de1e"
-  integrity sha512-PshqAnmCGRCXJCxaqP+TlS2MVuwcw1ISx1KdAEz6xuxclvrtcUQ6aRX0iMbkAcbO+YlwPsx9Ct3pOj6QB+qvnw==
+"@synthetixio/contracts-interface@0.0.0-ed94908":
+  version "0.0.0-ed94908"
+  resolved "https://registry.yarnpkg.com/@synthetixio/contracts-interface/-/contracts-interface-0.0.0-ed94908.tgz#87e4ca75f8e263f7d692efff53b56aed4e0f430c"
+  integrity sha512-jQIR815TMsXV9o43s7AItFf1zBncUarIi9b5ZPPGIQHeEoGU0pT9+MzlekvBqFBjGouxypqXbpgjBzN/1ZCg1A==
+  dependencies:
+    ethers "5.4.1"
+    lodash "4.17.19"
+    synthetix "2.47.0-ovm"
+    web3-utils "1.2.11"
 
-"@synthetixio/contracts-interface@2.47.0-ovm.5", "@synthetixio/contracts-interface@^2.47.0-ovm.5":
+"@synthetixio/contracts-interface@2.47.0-ovm.5":
   version "2.47.0-ovm.5"
   resolved "https://registry.yarnpkg.com/@synthetixio/contracts-interface/-/contracts-interface-2.47.0-ovm.5.tgz#5536c7ba4cc28d5e47ccb270900e64b1bb091695"
   integrity sha512-yzvaLyJyUxZAZH7cSLLI8HKA1j9svxsiJ+DjGLXDzOEadhfUPGPGGaMwQ+l1JSkiyUNw7qNHplg8myjcSHeL6w==
@@ -2705,12 +2710,12 @@
     synthetix "2.47.0-ovm"
     web3-utils "1.2.11"
 
-"@synthetixio/data@2.47.0-ovm.5":
-  version "2.47.0-ovm.5"
-  resolved "https://registry.yarnpkg.com/@synthetixio/data/-/data-2.47.0-ovm.5.tgz#2f69b65675e5ed3c49bec71c987ff4a10d56107e"
-  integrity sha512-nUrlvW8ReukHaDu/Tr1HWmcbDRjYg+zpdo1PEM2/Ud+bKbnlNdKqWPG8RyJ4xOJvQEbpO2biI4fZfAH9iUEvNQ==
+"@synthetixio/data@0.0.0-ed94908":
+  version "0.0.0-ed94908"
+  resolved "https://registry.yarnpkg.com/@synthetixio/data/-/data-0.0.0-ed94908.tgz#95543a31573c9c081df044697b8d39b00ddb1cdd"
+  integrity sha512-y9Sv4PX+QZjAT0q7TFehlslzkNKydy8s08c5h2a19ybH8AZIPJrxGdQCDEj5Fp2Hnd3ahLHiO9AvzK8S2lxXOA==
   dependencies:
-    "@synthetixio/contracts-interface" "^2.47.0-ovm.5"
+    "@synthetixio/contracts-interface" "0.0.0-ed94908"
     bignumber.js "9.0.1"
     date-fns "2.19.0"
     ethers "5.4.1"

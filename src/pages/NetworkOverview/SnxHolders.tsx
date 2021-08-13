@@ -6,7 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
+// import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
+import { SnxHolder } from '@synthetixio/data/build/data/generated/graphql';
 import Wei, { wei } from '@synthetixio/wei';
 
 import { BORDER_RADIUS } from 'config';
