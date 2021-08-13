@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://synth-scan.vercel.app">
-    <img src="https://synth-scan.vercel.app/screenshot.png" alt="synth scan" width=700 />
+    <img src="https://synth-scan.vercel.app/shot.png" alt="synth scan" width=700 />
   </a>
 </div>
 
