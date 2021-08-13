@@ -1,22 +1,35 @@
-import { FC, useContext, createContext, ReactNode } from 'react';
+import {
+  FC,
+  useContext,
+  createContext,
+  ReactNode,
+  useState,
+  useCallback,
+} from 'react';
 import NProgress from 'nprogress';
 
 const UIContext = createContext<{
   startProgress: () => void;
   endProgress: () => void;
+  inProgress: boolean;
 } | null>(null);
 
 export const UIProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const startProgress = () => {
+  const [inProgress, setInProgress] = useState<boolean>(false);
+
+  const startProgress = useCallback(() => {
+    setInProgress(true);
     NProgress.start();
     NProgress.set(0.4);
-  };
+  }, [setInProgress]);
 
-  const endProgress = () => {
+  const endProgress = useCallback(() => {
+    setInProgress(false);
     NProgress.done();
-  };
+  }, [setInProgress]);
+
   return (
-    <UIContext.Provider value={{ startProgress, endProgress }}>
+    <UIContext.Provider value={{ startProgress, endProgress, inProgress }}>
       {children}
     </UIContext.Provider>
   );
@@ -27,6 +40,6 @@ export function useUI() {
   if (!context) {
     throw new Error('Missing UI context');
   }
-  const { startProgress, endProgress } = context;
-  return { startProgress, endProgress };
+  const { startProgress, endProgress, inProgress } = context;
+  return { startProgress, endProgress, inProgress };
 }

@@ -58,8 +58,6 @@ const useStyles = makeStyles((theme) => {
     synthBalanceTable: {
       borderRadius: BORDER_RADIUS,
       background: 'white',
-      borderLeft: '1px solid rgba(224, 224, 224, 1)',
-      borderRight: '1px solid rgba(224, 224, 224, 1)',
     },
     synthBalanceTableHead: {
       background: '#E6E6E6',

@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => {
     table: {
       borderRadius: BORDER_RADIUS,
       background: 'white',
+      minHeight: 100,
 
       '& td, th': {
         borderColor: 'transparent',
@@ -65,6 +66,14 @@ const useStyles = makeStyles((theme) => {
       background: '#E6E6E6',
       borderTopLeftRadius: BORDER_RADIUS,
       borderTopRightRadius: BORDER_RADIUS,
+
+      '& th:first-child': {
+        borderTopLeftRadius: BORDER_RADIUS,
+      },
+
+      '& th:last-child': {
+        borderTopRightRadius: BORDER_RADIUS,
+      },
     },
   };
 });
@@ -74,7 +83,7 @@ const TransactionsList: FC<{}> = () => {
 
   const { data } = useSynthetix();
   const { address } = useAddress();
-  const { startProgress, endProgress } = useUI();
+  const { startProgress, endProgress, inProgress } = useUI();
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
@@ -146,44 +155,48 @@ const TransactionsList: FC<{}> = () => {
         <WalletSearchInput />
       </Box>
 
-      <Table
-        aria-label='SYNTH BALANCE'
-        size={'small'}
-        className={classes.table}
-      >
-        <TableHead className={classes.tableHead}>
-          <TableRow>
-            <TableCell>TIMESTAMP</TableCell>
-            <TableCell>TRANSACTION TYPE</TableCell>
-            <TableCell>AMOUNT</TableCell>
-            <TableCell>DETAILS</TableCell>
-            <TableCell align='right'>VIEW TX</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {transactions.map((transaction) => (
-            <TableRow key={transaction.id}>
-              <TableCell component='th' scope='row'>
-                {moment(transaction.timestamp)
-                  .local()
-                  .format('YYYY/MM/DD | HH:mm[h]')}
-              </TableCell>
-              <TableCell>{transaction.type}</TableCell>
-              <TableCell>{formatNumber(transaction.value, 2)}</TableCell>
-              <TableCell>-</TableCell>
-              <TableCell align='right'>
-                <a
-                  href={`https://etherscan.io/tx/${transaction.hash}`}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  LINK
-                </a>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Box className={classes.table}>
+        {!address ? (
+          <Box p={SPACING}>Search transactions</Box>
+        ) : !transactions.length && !inProgress ? (
+          <Box p={SPACING}>No transactions found</Box>
+        ) : (
+          <Table aria-label='SYNTH BALANCE' size={'small'}>
+            <TableHead className={classes.tableHead}>
+              <TableRow>
+                <TableCell>TIMESTAMP</TableCell>
+                <TableCell>TRANSACTION TYPE</TableCell>
+                <TableCell>AMOUNT</TableCell>
+                <TableCell>DETAILS</TableCell>
+                <TableCell align='right'>VIEW TX</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {transactions.map((transaction) => (
+                <TableRow key={transaction.id}>
+                  <TableCell component='th' scope='row'>
+                    {moment(transaction.timestamp)
+                      .local()
+                      .format('YYYY/MM/DD | HH:mm[h]')}
+                  </TableCell>
+                  <TableCell>{transaction.type}</TableCell>
+                  <TableCell>{formatNumber(transaction.value, 2)}</TableCell>
+                  <TableCell>-</TableCell>
+                  <TableCell align='right'>
+                    <a
+                      href={`https://etherscan.io/tx/${transaction.hash}`}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      LINK
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </Box>
     </Box>
   );
 };

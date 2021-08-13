@@ -2,7 +2,7 @@ import { FC, useContext, createContext, ReactNode, useState } from 'react';
 
 const AddressContext = createContext<{
   address: string | null;
-  setAddress: (s: string) => void;
+  setAddress: (s: string | null) => void;
 } | null>(null);
 
 export const AddressProvider: FC<{ children: ReactNode }> = ({ children }) => {

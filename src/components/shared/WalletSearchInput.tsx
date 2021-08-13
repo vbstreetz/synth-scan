@@ -12,7 +12,10 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    width: 600,
+    background: 'white',
+    // boxShadow: 'none',
+    // border: '1px solid rgba(0, 0, 0, 0.25)',
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -34,7 +37,9 @@ const WalletSearchInput: FC<{}> = () => {
         e.preventDefault();
         const form = e.target as any;
         const localAddress = form.input.value as string;
-        if (localAddress) setAddress(localAddress);
+        if (localAddress) {
+          setAddress(localAddress);
+        }
       }}
     >
       <InputBase
