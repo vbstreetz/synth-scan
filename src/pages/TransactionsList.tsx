@@ -6,7 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Wei, { wei } from '@synthetixio/wei';
+import Wei from '@synthetixio/wei';
 import orderBy from 'lodash/orderBy';
 import flatten from 'lodash/flatten';
 import moment from 'moment';
@@ -21,21 +21,19 @@ import { useUI } from 'contexts/ui';
 const SPACING = 4;
 
 export enum TransactionType {
-  Issued = 'mint',
-  Burned = 'burn',
-  FeesClaimed = 'fees claim',
+  Issued = 'Mint',
+  Burned = 'Burn',
+  FeesClaimed = 'Claim',
+  Trade = 'Trade',
 }
 
 export type Transaction = {
   id: string;
-  account: string;
-  block: number;
   hash: string;
-  value: Wei;
+  value: string;
   timestamp: number;
   type: TransactionType;
-  totalIssuedSUSD: Wei;
-  rewards?: Wei;
+  detail?: string;
 };
 
 export type UnformatedTransaction = {
@@ -57,10 +55,6 @@ const useStyles = makeStyles((theme) => {
       borderRadius: BORDER_RADIUS,
       background: 'white',
       minHeight: 100,
-
-      '& td, th': {
-        borderColor: 'transparent',
-      },
     },
     tableHead: {
       background: '#E6E6E6',
@@ -112,22 +106,54 @@ const TransactionsList: FC<{}> = () => {
       const result = await Promise.all(
         funcs.map((f) => f({ account: address }))
       );
+      const trades = await data.synthExchanges({
+        fromAddress: address,
+      });
 
       const typeTransactions = result.map((txns, idx) =>
         txns.map((txn: UnformatedTransaction) => {
           const type = types[idx];
+          // let detail;
+          // switch (type) {
+          //   case TransactionType.Issued:
+          //     detail = `Locked ${} SNX`;
+          //     break;
+          //   case TransactionType.Burned:
+          //     detail = `Unlocked ${} SNX`;
+          //   break;
+          //   case TransactionType.FeesClaimed:
+          //     detail = `Add ${} SNX`;
+          //     break;
+          // }
           return {
-            account: address,
-            block: txn.block,
             hash: txn.id.split('-')[0],
             id: txn.id,
-            value: wei(txn.value),
+            value: `${formatNumber(txn.value)} sUSD`,
             timestamp: txn.timestamp,
             type,
-            totalIssuedSUSD: wei(0),
+            // detail
           };
         })
       );
+
+      if (trades) {
+        typeTransactions.push(
+          trades.map((txn) => {
+            return {
+              hash: txn.id.split('-')[0],
+              id: txn.id.toString(),
+              value: `${formatNumber(txn.fromAmount, 2)} ${
+                txn.fromCurrencyKey
+              }`,
+              timestamp: txn.timestamp,
+              type: TransactionType.Trade,
+              detail: `Bought ${formatNumber(txn.toAmount, 2)} ${
+                txn.toCurrencyKey
+              }`,
+            };
+          })
+        );
+      }
 
       const transactions = orderBy(
         flatten(typeTransactions),
@@ -180,8 +206,8 @@ const TransactionsList: FC<{}> = () => {
                       .format('YYYY/MM/DD | HH:mm[h]')}
                   </TableCell>
                   <TableCell>{transaction.type}</TableCell>
-                  <TableCell>{formatNumber(transaction.value, 2)}</TableCell>
-                  <TableCell>-</TableCell>
+                  <TableCell>{transaction.value}</TableCell>
+                  <TableCell>{transaction.detail ?? '-'}</TableCell>
                   <TableCell align='right'>
                     <a
                       href={`https://etherscan.io/tx/${transaction.hash}`}

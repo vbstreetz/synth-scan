@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
       padding: '70px 0 10px',
       width: 'auto',
     },
+    '& a': {
+      textDecoration: 'none',
+    },
     '& a, a:visited': {
       color: theme.palette.secondary.main,
     },
@@ -29,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
       transform: 'translate(0, 1.5px) scale(1)',
       transformOrigin: 'top left',
       fontSize: 12,
+    },
+    '& td, th': {
+      borderColor: 'transparent',
     },
   },
 }));
@@ -43,12 +49,8 @@ const Layout: FC = () => {
 
         <Switch>
           <Route exact path={'/'} component={WalletOverview} />
-          <Route exact path={'/network-overview'} component={NetworkOverview} />
-          <Route
-            exact
-            path={'/transactions-list'}
-            component={TransactionsList}
-          />
+          <Route path={'/network-overview'} component={NetworkOverview} />
+          <Route path={'/transactions-list'} component={TransactionsList} />
         </Switch>
 
         <Switch>
