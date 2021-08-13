@@ -206,7 +206,7 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
   const { totalValue } = useWalletSynthBalances(holder.wallet);
 
   return (
-    <TableRow key={holder.wallet}>
+    <TableRow key={holder.wallet} data-testid='snx-holder-row'>
       <TableCell component='th' scope='row'>
         {rank}
       </TableCell>
