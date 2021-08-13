@@ -6,9 +6,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import CopyIcon from '@material-ui/icons/FileCopy';
+import CopiedIcon from '@material-ui/icons/Check';
+import clsx from 'clsx';
 // import { SnxHolder } from '@synthetixio/data/build/generated/graphql';
 import { SnxHolder } from '@synthetixio/data/build/data/generated/graphql';
 import Wei, { wei } from '@synthetixio/wei';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { BORDER_RADIUS } from 'config';
 import { useSynthetix } from 'contexts/synthetix';
@@ -47,6 +51,14 @@ const useStyles = makeStyles((theme) => {
 
       '& th:last-child': {
         borderTopRightRadius: BORDER_RADIUS,
+      },
+    },
+    copyContainer: {
+      '& span': {
+        opacity: '0',
+      },
+      '&:hover span': {
+        opacity: '1',
       },
     },
   };
@@ -193,7 +205,12 @@ const SnxHolders: FC = () => {
                 <TableCell component='th' scope='row'>
                   {i + 1}
                 </TableCell>
-                <TableCell>{abbrAddress(holder.wallet)}</TableCell>
+                <TableCell>
+                  <Copy
+                    label={abbrAddress(holder.wallet)}
+                    value={holder.wallet}
+                  />
+                </TableCell>
                 <TableCell align='right'>
                   {formatNumber(holder.totalSNX, 2)}
                 </TableCell>
@@ -227,4 +244,35 @@ const SnxHolders: FC = () => {
   );
 };
 
+const Copy: FC<{ label: string; value: string }> = ({ label, value }) => {
+  const classes = useStyles();
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const onCopy = () => {
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
+  return (
+    <CopyToClipboard text={value} {...{ onCopy }}>
+      <Box
+        className={clsx(
+          classes.copyContainer,
+          'flex items-center cursor-pointer'
+        )}
+      >
+        <Box mr={1}>{label}</Box>
+        <Box component='span' className='flex items-center'>
+          {copied === true ? (
+            <CopiedIcon fontSize={'small'} />
+          ) : (
+            <CopyIcon fontSize={'small'} />
+          )}
+        </Box>
+      </Box>
+    </CopyToClipboard>
+  );
+};
 export default SnxHolders;

@@ -47,9 +47,8 @@ const NetworkOverview: FC<{}> = () => {
     <Box className={classes.container}>
       <Box mb={SPACING} className={clsx(classes.tabs, 'flex')}>
         {TABS.map((tab) => (
-          <Link to={`/network-overview${tab.to}`}>
+          <Link to={`/network-overview${tab.to}`} key={tab.to}>
             <Button
-              key={tab.to}
               variant='contained'
               className={clsx(classes.tab, {
                 [classes.activeTab]: ~path.search(tab.to),
@@ -66,6 +65,7 @@ const NetworkOverview: FC<{}> = () => {
           <Route
             path={`/network-overview${tab.to}`}
             component={tab.component}
+            key={tab.to}
           />
         ))}
         <Redirect to='/network-overview/snx-holders' />
