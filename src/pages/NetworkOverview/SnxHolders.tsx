@@ -16,6 +16,7 @@ import { useUI } from 'contexts/ui';
 import { formatNumber } from 'utils/big-number';
 import { abbrAddress } from 'utils/string';
 import CopyToClipboard from 'components/shared/CopyToClipboard';
+import useWalletSynthBalances from 'hooks/useWalletSynthBalances';
 
 const SPACING = 4;
 
@@ -94,21 +95,22 @@ const SnxHolders: FC = () => {
         }),
       ]);
 
-      const [
-        snxPrice,
-        // snxTotalSupply,
-        lastDebtLedgerEntry,
-        totalIssuedSynths,
-        issuanceRatio,
-      ] = result
-        .slice(0, result.length - 1)
-        .map((item) => wei(formatEther(item)));
-
-      const holders = result[result.length - 1];
-
       endProgress();
 
-      if (isMounted && holders) {
+      if (isMounted) {
+        const [
+          snxPrice,
+          // snxTotalSupply,
+          lastDebtLedgerEntry,
+          totalIssuedSynths,
+          issuanceRatio,
+        ] = result
+          .slice(0, result.length - 1)
+          .map((item) => wei(formatEther(item)));
+
+        const holders = result[result.length - 1];
+        if (!holders) return;
+
         let totalDebtBalance = wei(0);
 
         const h = holders.map((holder: SnxHolder) => {
@@ -201,36 +203,7 @@ const SnxHolders: FC = () => {
 const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
   // const classes = useStyles();
 
-  const { js } = useSynthetix();
-  const [synthBalanceSUSD, setSynthBalanceSUSD] = useState<Wei | null>(null);
-
-  useEffect(() => {
-    if (!js) return;
-
-    let isMounted = true;
-    const unsubs = [
-      () => {
-        isMounted = false;
-      },
-    ];
-
-    const load = async () => {
-      const { ProxyERC20sUSD } = js.contracts;
-      const { formatEther } = js.utils;
-      const unformatedBalance = await ProxyERC20sUSD.balanceOf(holder.wallet);
-
-      if (isMounted) {
-        const balance = wei(formatEther(unformatedBalance));
-        setSynthBalanceSUSD(balance);
-      }
-    };
-
-    load();
-
-    return () => {
-      unsubs.forEach((unsub) => unsub());
-    };
-  }, [js, holder.wallet]);
+  const { totalValue } = useWalletSynthBalances(holder.wallet);
 
   return (
     <TableRow key={holder.wallet}>
@@ -259,7 +232,7 @@ const HolderRow: FC<{ holder: Holder; rank: number }> = ({ holder, rank }) => {
         {formatNumber(holder.debtPercentage, 2)}%
       </TableCell>
       <TableCell align='right'>
-        {!synthBalanceSUSD ? '-' : formatNumber(synthBalanceSUSD, 2)}
+        {!totalValue ? '-' : formatNumber(totalValue, 2)}
       </TableCell>
     </TableRow>
   );
